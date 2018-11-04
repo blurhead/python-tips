@@ -1,0 +1,77 @@
+#+OPTIONS: "\n:t"
+
+#+TITLE: python中的逻辑判断
+
+* 写在前面的话
+  python中的逻辑判断最熟悉的莫过于if-else或者if-elif-else，
+
+  再加上and，not，or就可以实现大部分的逻辑处理。
+
+  这里主要介绍一些高级的用法，可以使你的代码更简洁。
+
+* and 和 or 的使用技巧
+  多个表达式使用and/or连接时，python其实并不会计算每一个表达式，
+
+  而是按照顺序，一旦满足条件就跳过后面的计算.
+
+  and 遇到 False 则退出, or 遇到 True 则退出.
+
+  实际应用中可以利用这些特性提高执行效率，避免一些错误，比如：
+  #+BEGIN_SRC python
+    print(1==True or 1000 in 1000, 1 in {2:1} and {2:1}[1])
+    # 输出结果为True，False
+  #+END_SRC
+  
+  #+RESULTS:
+  | True | False |
+
+* 使用 and/or 简化代码
+  使用or连接的表达式返回第一个布尔值为True的表达式结果, 或者最后一个表达式的结果
+
+  使用and连接的表达式返回第一个布尔值为False的表达式结果, 或者最后一个表达式的结果
+
+  使用 and/or 作为函数的返回值或者直接赋值给变量可以有效简化代码
+  #+BEGIN_SRC python
+
+    a = 1 or {}
+    b = 1 and {}
+    print(a==1, b=={})
+    #输出结果为 True, True
+  #+END_SRC
+
+  #+RESULTS:
+  : None
+
+* 使用 any/all 代替 and/or
+  any 接收一个可迭代对象, 如果其中有条件为 True 的, 返回 True, 否则 返回 False
+
+  all 接收一个可迭代对象, 如果其中有条件为 False 的, 返回 False, 否则返回 True
+
+  当有多个判断条件时, 尤其是当判断条件的数量并不确定, 就可以使用 any/all 函数
+
+  需要注意的是, any/all 需要把可迭代对象(生成器除外)全部都遍历一边才会返回结果
+  #+BEGIN_SRC python
+    a = [1, 'hello', False]
+    print(any(a), all(a))
+    # 输出结果为 True, False
+
+  #+END_SRC
+
+  #+RESULTS:
+  | True | False |
+
+* any/all 使用技巧
+  any/all 还可以结合各种推导式, 实现更复杂的功能.
+
+  比如判断一个可迭代对象中有没有含有某个关键字的字符串
+  #+BEGIN_SRC python
+    a = [1, 'hello', False]
+    print(any(if isinstance(val, str) and 'h' in val for val in a))
+    # 输出结果为 True
+
+  #+END_SRC
+   这里 any 的参数是一个生成器, 这里生成器推导式的括号可以省略.
+
+   也可以使用列表推导式, 使用生成器推导式的好处在于不需要遍历一遍才返回,
+
+   遇到表达式结果为 True 就会返回,  这里的结论也适用于 all 的使用场景.
